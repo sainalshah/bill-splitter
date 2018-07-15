@@ -8,6 +8,8 @@ var passport       = require('passport');
 var expressSession = require('express-session');
 var cookieParser   = require("cookie-parser");
 
+var billsRouter = require('./routes/bills');
+var rentRouter = require('./routes/rent');
 // Mongoose Setup
 mongoose.connect('mongodb://localhost:27017/bsp');
 
@@ -42,7 +44,12 @@ app.get("/logout", function(req, res){
 })
 
 // Home page
+
+rentRouter
+app.use('/bills',billsRouter);
+app.use('/rent',rentRouter);
 app.get('/', function(req, res){
+
   res.render('layout', {user: req.user});
 });
 
