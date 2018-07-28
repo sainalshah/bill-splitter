@@ -1,24 +1,46 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var Verify = require('../config/verify');
 
 var Bill = require('../models/bill');
 var User = require('../models/user');
+var Rent = require('../models/rent');
+var configStore = require('../config/config');
 
 var rentRouter = express.Router();
 rentRouter.use(bodyParser.json());
 rentRouter.route('/')
-    .get(function (req, res, next) {
-        User.find({}).lean()
-            .exec(function (err, users) {
-                if (err) throw err;
-                Bill.find({})
-                    .exec(function (err, bills) {
-                        if (err) throw err;
-                        res.json(determineRent(users, bills));
-                    });
-            });
+    .get(Verify.verifyOrdinaryUser, async function (req, res, next) {
+        try {
+            lastRent = await Rent.findOne().sort({ createdTstamp: -1 }).limit(1).exec();
+            if (!lastRent) {
+                lastRent = getDummyRent();
+            }
+            bills = await Bill.find({ createdTstamp: { $gt: lastRent.billEndDate } }).exec();
+
+            users = await User.find({}).lean().exec();
+            return res.json(determineRent(users, bills));
+        } catch (e) {
+            next(e);
+        }
+        res.json({ "Error": 500 });
     });
+function getDummyRent() {
+
+    cutoffDate = configStore.getCutoffDate();
+    lastRent = new Date(cutoffDate.setMonth(cutoffDate.getMonth() - 1));
+    return {
+        id: "test",
+        billStartDate: null,
+        billEndDate: lastRent,
+        rent: [{
+            _id: "test_user",
+            rent: 0.0
+        }],
+        created_at: new Date()
+    }
+}
 function updateRent(users, index, rent) {
     if (index > -1) {
         users[index].rent = typeof users[index].rent !== 'undefined' ?
@@ -43,7 +65,7 @@ function determineRent(users, bills) {
             // console.log("bill Creators index", billCreatedUserIndex);
 
             billCreatorReduction = -1 * share * (n - 1);
-            users = updateRent(users, billCreatedUserIndex,billCreatorReduction);
+            users = updateRent(users, billCreatedUserIndex, billCreatorReduction);
         });
     });
     console.log("print user before returning", users);

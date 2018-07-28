@@ -1,8 +1,8 @@
 var mongoose = require('mongoose');
 
-module.exports = mongoose.model('Config',{
+module.exports = mongoose.model('Config', {
     id: String,
-    name: String,
+    key: String,
     value: String,
-    type: String
+    type:String
 });

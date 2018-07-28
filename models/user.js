@@ -3,8 +3,7 @@ module.exports = mongoose.model('User', {
   fb: {
     id: String,
     access_token: String,
-    firstName: String,
-    lastName: String,
+    name: String,
     email: String
   },
   baseRent: Number,
