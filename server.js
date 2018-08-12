@@ -20,7 +20,7 @@ options = {
   allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token"],
   credentials: true,
   methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
-  origin: "http://localhost:4200",
+  origin: "http://192.168.1.106:4200",
   preflightContinue: false
 };
 
@@ -46,16 +46,10 @@ app.use(express.static(__dirname + '/public'));
 // Setting up the Passport Strategies
 require("./config/passport")(passport)
 
-// -> Facebook
-
-// <- Facebook
-// app.post('/auth/login', passport.authenticate('local-sigin', {
-//   successRedirect : '/profile', // redirect to the secure profile section
-//   failureRedirect : '/signup', // redirect back to the signup page if there is an error
-//   failureFlash : true // allow flash messages
-// }));
 app.post('/auth/login', function (req, res, next) {
   console.log('inside post /auth/');
+  console.log(req.headers['x-access-token']);
+  
   passport.authenticate('local-signin', function (err, user, info) {
     if (err) {
       return next(err);
@@ -92,7 +86,6 @@ app.get("/logout", function (req, res) {
 
 // Home page
 
-rentRouter
 app.use('/bills', billsRouter);
 app.use('/rent', rentRouter);
 app.get('/', function (req, res) {
