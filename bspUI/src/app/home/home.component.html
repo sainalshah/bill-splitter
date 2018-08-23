@@ -1,0 +1,27 @@
+<div class="container">
+    <h1>My Bills</h1>
+    <mat-table class="bills-table mat-elevation-z8" [dataSource]="dataSource">
+
+        <ng-container matColumnDef="createdTstamp">
+            <mat-header-cell *matHeaderCellDef>Date Created</mat-header-cell>
+            <mat-cell *matCellDef="let bill">{{bill.createdTstamp}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+            <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
+            <mat-cell class="description-cell" *matCellDef="let bill">{{bill.description}}</mat-cell>
+
+        </ng-container>
+
+        <ng-container matColumnDef="amount">
+            <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
+            <mat-cell class="amount-cell" *matCellDef="let bill">{{bill.amount}}</mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+    </mat-table>
+
+</div>

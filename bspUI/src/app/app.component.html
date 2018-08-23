@@ -1,0 +1,34 @@
+<!-- Container for sidebar(s) + page content -->
+<ng-sidebar-container>
+
+  <!-- A sidebar -->
+  <ng-sidebar [(opened)]="_opened" [closeOnClickOutside]="true" [mode]="_MODES[_modeNum]" [keyClose]="_keyClose" [position]="_POSITIONS[_positionNum]"
+    [dock]="_dock" [dockedSize]="'50px'" [autoCollapseHeight]="_autoCollapseHeight" [autoCollapseWidth]="_autoCollapseWidth"
+    [closeOnClickOutside]="_closeOnClickOutside" [closeOnClickBackdrop]="_closeOnClickBackdrop" [showBackdrop]="_showBackdrop"
+    [animate]="_animate" [trapFocus]="_trapFocus" [autoFocus]="_autoFocus" [sidebarClass]="'demo-sidebar'" [ariaLabel]="'My sidebar'">
+    <header class="demo-header">
+      <button (click)="_toggleSidebar()" class="demo-header__toggle" *ngIf="isLoggedIn()">Toggle sidebar</button>
+      <span>Bill Splitter V3.0</span>
+    </header>
+    <hr>
+    <div class="btn-group btn-group-vertical d-flex" role="group" aria-label="...">
+      <button routerLink="/my-bills" type="button" class="btn btn-default w-100" (click)="_toggleSidebar()">My bills</button>
+      <button type="button" class="btn btn-default w-100" (click)="_toggleSidebar()">Manage bills</button>
+      <button type="button" class="btn btn-default w-100" (click)="_toggleSidebar()">View rent</button>
+      <button type="button" class="btn btn-default w-100" (click)="_toggleSidebar()">Admin</button>
+
+      <button type="button" class="btn btn-default w-100" (click)="_toggleSidebar();logout()">Logout</button>
+    </div>
+  </ng-sidebar>
+
+  <!-- Page content -->
+  <div ng-sidebar-content>
+    <header class="demo-header">
+      <button (click)="_toggleSidebar()" class="demo-header__toggle" *ngIf="isLoggedIn()">Toggle sidebar</button>
+      <span>Bill Splitter V3.0</span>
+    </header>
+
+    <router-outlet></router-outlet>
+  </div>
+
+</ng-sidebar-container>
